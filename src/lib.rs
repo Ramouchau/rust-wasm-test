@@ -48,6 +48,20 @@ impl Universe {
         }
     }
 
+    pub fn init_cells_random(&mut self) {
+        for cell in self.cells.iter_mut() {
+            let val = random();
+            *cell = match val {
+                x if x < 0.5 => Cell::Dead,
+                _ => Cell::Alive,
+            }
+        }
+    }
+
+    pub fn init_cells_dead(&mut self) {
+        self.cells = self.cells.iter().map(|_| Cell::Dead).collect()
+    }
+
     pub fn width(&self) -> u32 {
         self.width
     }
@@ -112,5 +126,19 @@ impl Universe {
         }
 
         self.cells = next;
+    }
+
+    pub fn toggle_cell(&mut self, row: u32, column: u32) {
+        let idx = self.get_index(row, column);
+        self.cells[idx].toggle();
+    }
+}
+
+impl Cell {
+    fn toggle(&mut self) {
+        *self = match *self {
+            Cell::Dead => Cell::Alive,
+            Cell::Alive => Cell::Dead,
+        };
     }
 }
